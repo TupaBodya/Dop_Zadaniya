@@ -1,57 +1,64 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
-// Функция для получения следующей вершины в соответствии с условиями задачи
-int getNextVertex(int height) {
-    if (height % 2 == 0) {
-        return height / 2;
+
+int nextHeight(int X) { 
+    if (X % 2 == 0) {
+        return X / 2;
     } else {
-        return 3 * height + 1;
+        return 3 * X + 1;
     }
 }
 
-// Функция для сортировки перспективных вершин
-void sortVertices(vector<int>& vertices) {
-    for (int i = 0; i < vertices.size() - 1; i++) {
-        for (int j = 0; j < vertices.size() - i - 1; j++) {
-            if (vertices[j] > vertices[j + 1]) {
-                int temp = vertices[j];
-                vertices[j] = vertices[j + 1];
-                vertices[j + 1] = temp;
-            }
+bool RightHeight(int X) {
+    return X < 8848;
+}
+
+vector<int> listPerspectiveHeights(int startHeight) { 
+    vector<int> perspectives;
+    int currentHeight = startHeight;
+    while (RightHeight(currentHeight)) {
+        if (currentHeight == 8848) {
+            perspectives.push_back(currentHeight);
+            break;
+        } else if (currentHeight % 2 == 0) {
+            perspectives.push_back(currentHeight);
+            currentHeight = nextHeight(currentHeight);
+        } else {
+            currentHeight = nextHeight(currentHeight);
         }
     }
+;
+
+    return perspectives;
 }
 
 int main() {
+	 setlocale(LC_ALL, "Russian");
+	 system("color F0");
+    int startHeight;
+    cout << "Р’РІРµРґРёС‚Рµ РЅР°С‡Р°Р»СЊРЅСѓСЋ РІС‹СЃРѕС‚Сѓ: ";
+    cin >> startHeight;
+
+    vector<int> perspectives = listPerspectiveHeights(startHeight); 
+    sort(perspectives.begin(), perspectives.end());
+
     int i;
+    cout << "Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ РІРµСЂС€РёРЅС‹ РІ СЃРїРёСЃРєРµ: ";
     cin >> i;
 
-    vector<int> vertices;
-    vertices.push_back(8848); // Добавляем начальную вершину
-
-    // Генерируем список перспективных вершин
-    for (int height = 8848; height > 1; ) {
-        height = getNextVertex(height);
-        if (height > 8848)
-            break;
-        
-        vertices.push_back(height);
-    }
-
-    // Сортируем список по возрастанию высот
-    sortVertices(vertices);
-
-    // Проверяем, есть ли в списке вершина с номером i
-    if (i <= vertices.size()) {
-        cout << vertices[i - 1] << endl;
+    if (i <= perspectives.size()) { 
+        cout << "Р’С‹СЃРѕС‚Р° " << i << "-Р№ РІРµСЂС€РёРЅС‹: " << perspectives[i-1] << endl;
     } else {
         cout << -1 << endl;
     }
 
 	system("pause");
+
     return 0;
+	
 }
